@@ -1,5 +1,5 @@
 '''
-Concrete MethodModule class for CNN
+Concrete MethodModule class for CNN on ORL
 '''
 
 from code.base_class.method import method
@@ -14,9 +14,9 @@ import os
 
 class Method_CNN(method, nn.Module):
     data = None
-    max_epoch = 10
+    max_epoch = 15
     learning_rate = 1e-3
-    batch_size = 64
+    batch_size = 16
 
     def __init__(self, mName, mDescription):
         method.__init__(self, mName, mDescription)
@@ -24,7 +24,7 @@ class Method_CNN(method, nn.Module):
 
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-        # CNN for MNIST: input shape = 1 x 28 x 28
+        # CNN for ORL: input shape = 1 x 112 x 92
         self.conv1 = nn.Conv2d(1, 32, kernel_size=3, padding=1)
         self.relu1 = nn.ReLU()
         self.pool1 = nn.MaxPool2d(2, 2)
@@ -33,21 +33,22 @@ class Method_CNN(method, nn.Module):
         self.relu2 = nn.ReLU()
         self.pool2 = nn.MaxPool2d(2, 2)
 
-        # After two pooling layers: 28 -> 14 -> 7
-        self.fc1 = nn.Linear(64 * 7 * 7, 128)
+        # After two pooling layers:
+        # 112 -> 56 -> 28
+        # 92 -> 46 -> 23
+        self.fc1 = nn.Linear(64 * 28 * 23, 128)
         self.relu3 = nn.ReLU()
-        self.fc2 = nn.Linear(128, 10)
+        self.fc2 = nn.Linear(128, 40)
 
         self.to(self.device)
 
     def forward(self, x):
-        # Convert flat MNIST input to image format
-        x = x.reshape(-1, 1, 28, 28)
+        x = x.reshape(-1, 1, 112, 92)
 
         x = self.pool1(self.relu1(self.conv1(x)))
         x = self.pool2(self.relu2(self.conv2(x)))
 
-        x = x.view(x.size(0), -1)
+        x = x.reshape(x.size(0), -1)
 
         x = self.relu3(self.fc1(x))
         y_pred = self.fc2(x)
@@ -69,7 +70,8 @@ class Method_CNN(method, nn.Module):
         }
 
         acc = accuracy_evaluator.evaluate()
-        return loss, acc
+        precision = accuracy_evaluator.last_metrics['precision']
+        return loss, acc, precision
 
     def train(self, X, y, test_X, test_y):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.learning_rate)
@@ -112,14 +114,14 @@ class Method_CNN(method, nn.Module):
 
             avg_epoch_loss = epoch_loss / len(train_dataset)
 
-            train_eval_loss, train_acc = self.evaluate_dataset(
+            train_eval_loss, train_acc, train_precision = self.evaluate_dataset(
                 train_X_tensor,
                 train_y_true,
                 loss_function,
                 'training evaluator'
             )
 
-            test_loss, test_acc = self.evaluate_dataset(
+            test_loss, test_acc, test_precision = self.evaluate_dataset(
                 test_X_tensor,
                 test_y_true,
                 loss_function,
@@ -135,8 +137,10 @@ class Method_CNN(method, nn.Module):
             print(
                 'Epoch:', epoch,
                 'Train Accuracy:', train_acc,
+                'Train Precision:', train_precision,
                 'Train Loss:', train_loss_list[-1],
                 'Test Accuracy:', test_acc,
+                'Test Precision:', test_precision,
                 'Test Loss:', test_loss
             )
 
@@ -160,9 +164,9 @@ class Method_CNN(method, nn.Module):
         plt.plot(epochs, test_losses, label='Test Loss')
         plt.xlabel('Epoch')
         plt.ylabel('Loss')
-        plt.title('CNN Train vs Test Loss Curve')
+        plt.title('ORL CNN Train vs Test Loss Curve')
         plt.legend()
-        plt.savefig(save_folder + 'cnn_training_loss_curve.png')
+        plt.savefig(save_folder + 'orl_cnn_training_loss_curve.png')
         plt.close()
 
         plt.figure()
@@ -170,9 +174,9 @@ class Method_CNN(method, nn.Module):
         plt.plot(epochs, test_accs, label='Test Accuracy')
         plt.xlabel('Epoch')
         plt.ylabel('Accuracy')
-        plt.title('CNN Train vs Test Accuracy Curve')
+        plt.title('ORL CNN Train vs Test Accuracy Curve')
         plt.legend()
-        plt.savefig(save_folder + 'cnn_training_accuracy_curve.png')
+        plt.savefig(save_folder + 'orl_cnn_training_accuracy_curve.png')
         plt.close()
 
     def test(self, X):

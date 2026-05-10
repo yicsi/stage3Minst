@@ -22,6 +22,7 @@ class Setting_Train_Test_Split(setting):
         self.result.save()
 
         self.evaluate.data = learned_result
+        self.evaluate.data['final'] = True
         score = self.evaluate.evaluate()
 
         return score, 0

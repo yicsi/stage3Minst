@@ -7,13 +7,13 @@ from code.stage_3_code.Evaluate_Accuracy import Evaluate_Accuracy
 # ---- Convolutional Neural Network script ----
 if 1:
     # ---- object initialization section -------------------
-    data_obj = Dataset_Loader('mnist', '')
+    data_obj = Dataset_Loader('orl', '')
     data_obj.dataset_source_folder_path = '../../data/stage_3_data/'
 
     method_obj = Method_CNN('convolutional neural network', '')
 
     result_obj = Result_Saver('saver', '')
-    result_obj.result_destination_folder_path = '../../result/stage_3_result/CNN_'
+    result_obj.result_destination_folder_path = '../../result/stage_3_result/ORL_CNN_'
     result_obj.result_destination_file_name = 'prediction_result'
 
     setting_obj = Setting_Train_Test_Split('train test split', '')
