@@ -1,8 +1,8 @@
-from code.stage_3_code.Dataset_Loader import Dataset_Loader
+from code.stage_4_code.Dataset_Loader import Dataset_Loader
 from code.stage_1_code.Method_SVM import Method_SVM
-from code.stage_3_code.Result_Saver import Result_Saver
+from code.stage_4_code.Result_Saver import Result_Saver
 from code.stage_1_code.Setting_KFold_CV import Setting_KFold_CV
-from code.stage_3_code.Evaluate_Accuracy import Evaluate_Accuracy
+from code.stage_4_code.Evaluate_Accuracy import Evaluate_Accuracy
 import numpy as np
 
 #---- Support Vector Machine script ----

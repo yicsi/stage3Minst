@@ -1,8 +1,8 @@
-from code.stage_3_code.Dataset_Loader import Dataset_Loader
-from code.stage_3_code.Method_CNN import Method_MLP
-from code.stage_3_code.Result_Saver import Result_Saver
-from code.stage_3_code.Setting_Train_Test_Split import Setting_Train_Test_Split
-from code.stage_3_code.Evaluate_Accuracy import Evaluate_Accuracy
+from code.stage_4_code.Dataset_Loader import Dataset_Loader
+from code.stage_4_code.Method_RNN import Method_MLP
+from code.stage_4_code.Result_Saver import Result_Saver
+from code.stage_4_code.Setting_Train_Test_Split import Setting_Train_Test_Split
+from code.stage_4_code.Evaluate_Accuracy import Evaluate_Accuracy
 import numpy as np
 
 
